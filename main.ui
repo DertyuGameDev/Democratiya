@@ -14,29 +14,77 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="loadButton">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>530</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-   </widget>
+
    <widget class="QTableWidget" name="coffeeTable">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>10</x>
       <y>10</y>
-      <width>781</width>
-      <height>511</height>
+      <width>780</width>
+      <height>500</height>
      </rect>
     </property>
+    <property name="columnCount">
+     <number>7</number>
+    </property>
+    <property name="rowCount">
+     <number>0</number>
+    </property>
+    <property name="horizontalHeaderLabels">
+     <stringlist>
+      <string>ID</string>
+      <string>Название сорта</string>
+      <string>Степень обжарки</string>
+      <string>Молотый/В зернах</string>
+      <string>Описание вкуса</string>
+      <string>Цена</string>
+      <string>Объем упаковки</string>
+     </stringlist>
+    </property>
    </widget>
+
+   <widget class="QPushButton" name="loadButton">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>530</y>
+      <width>100</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Загрузить</string>
+    </property>
+   </widget>
+
+   <widget class="QPushButton" name="addButton">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>530</y>
+      <width>100</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Добавить</string>
+    </property>
+   </widget>
+
+   <widget class="QPushButton" name="editButton">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>530</y>
+      <width>100</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Редактировать</string>
+    </property>
+   </widget>
+
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
