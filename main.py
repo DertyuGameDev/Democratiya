@@ -1,13 +1,15 @@
 import sys
 import sqlite3
-from PyQt6 import QtWidgets, uic
+from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QDialog, QMainWindow, QMessageBox
+from editform import Ui_AddEditCoffeeForm
+from main1 import Ui_MainWindow
 
 
-class AddEditCoffeeForm(QDialog):
+class AddEditCoffeeForm(QDialog, Ui_AddEditCoffeeForm):
     def __init__(self, parent=None, coffee_data=None):
         super().__init__(parent)
-        uic.loadUi('addEditCoffeeForm.ui', self)
+        self.setupUi(self)
         self.coffeedata = coffee_data
         self.is_edit = bool(coffee_data)
 
@@ -58,17 +60,17 @@ class AddEditCoffeeForm(QDialog):
         self.accept()
 
 
-class CoffeeApp(QMainWindow):
+class CoffeeApp(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('main.ui', self)
+        self.setupUi(self)
         self.loadButton.clicked.connect(self.load_coffee_data)
         self.addButton.clicked.connect(self.add_coffee)
         self.editButton.clicked.connect(self.edit_coffee)
         self.load_coffee_data()
 
     def load_coffee_data(self):
-        connection = sqlite3.connect('coffee.sqlite')
+        connection = sqlite3.connect('data/coffee.sqlite')
         cursor = connection.cursor()
 
         try:
@@ -100,7 +102,7 @@ class CoffeeApp(QMainWindow):
         form = AddEditCoffeeForm(self)
         if form.exec() == QtWidgets.QDialog.DialogCode.Accepted:
             data = form.result_data
-            connection = sqlite3.connect('coffee.sqlite')
+            connection = sqlite3.connect('data/coffee.sqlite')
             cursor = connection.cursor()
             try:
                 cursor.execute("""
@@ -150,7 +152,7 @@ class CoffeeApp(QMainWindow):
         form = AddEditCoffeeForm(self, coffee_data=coffee_data)
         if form.exec() == QtWidgets.QDialog.DialogCode.Accepted:
             data = form.result_data
-            connection = sqlite3.connect('coffee.sqlite')
+            connection = sqlite3.connect('data/coffee.sqlite')
             cursor = connection.cursor()
             try:
                 cursor.execute("""
