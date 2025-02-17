@@ -92,13 +92,15 @@ org_address = organization["properties"]["CompanyMetaData"]["address"]
 
 # Получаем координаты ответа.
 point = organization["geometry"]["coordinates"]
+point1 = list(map(float, org_point.split(',')))
+sp = f'{abs(point[0] - point1[0]) * 2},{abs(point[1] - point1[1]) * 2}'
 org_point2 = f"{point[0]},{point[1]}"
 
 apikey = "ef67d706-4387-4517-8b08-50f4c0929dd7"
 # Собираем параметры для запроса к StaticMapsAPI:
 map_params = {
     "ll": ",".join([toponym_longitude, toponym_lattitude]),
-    "spn": spn1(json_response),
+    "spn": sp,
     "apikey": apikey,
     "pt": f"{org_point2},pm2dgl~{org_point},pm2dbl"
 }
