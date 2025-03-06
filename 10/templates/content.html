@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Оформление каюты</h2>
+<table>
+    <tr>
+        <th class="color_name_table">Цвет стен</th>
+        <th class="color_name_table2">Эмблема</th>
+    </tr>
+    <tr>
+        {%- if sex == 'male' -%}
+        {%- if age < 21 -%}
+        <td bgcolor="#6495ed"></td>
+        {%- else -%}
+        <td bgcolor="blue"></td>
+        {%- endif -%}
+        {%- else -%}
+        {% if age < 21 -%}
+        <td bgcolor="#ff7f50"></td>
+        {%- else -%}
+        <td bgcolor="red"></td>
+        {%- endif -%}
+        {%- endif -%}
+
+        {% if age < 21 %}
+        <td><img src="{{url_for('static', filename='img/small_marsianin.png')}}"></td>
+        {% else %}
+        <td><img src="{{url_for('static', filename='img/big_marsianin.png')}}"></td>
+        {% endif %}
+    </tr>
+</table>
+{% endblock %}
