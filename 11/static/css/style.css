@@ -1,0 +1,28 @@
+.body {
+    background-color: #00b2ee;
+}
+
+h5 {
+    color: white;
+}
+
+h2 {
+    text-align: center;
+}
+
+h4 {
+    color: darkgrey;
+    margin-left: 20px;
+    opacity: 0.5;
+}
+
+.form-login {
+    max-width: 520px;
+    background: beige;
+    border-radius: 4px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    border-style: solid;
+    border-color: black;
+}

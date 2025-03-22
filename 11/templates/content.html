@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 align="center">Пейзажи Марса</h1>
+
+    <div id="carouselExampleDark" class="carousel carousel-dark slide">
+        <div class="carousel-indicators">
+
+          {% for i in files %}
+                {% if not loop.first %}
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="{{ loop.index -1}}"></button>
+                {% else %}
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active"
+                  aria-current="true"></button>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div>
+          <div class="carousel-inner">
+            {% for i in files %}
+              {% if not loop.first %}
+                <div class="carousel-item" data-bs-interval="2000">
+                  <img src="{{ i }}" class="d-block w-100" alt="...">
+                </div>
+              {% else %}
+                  <div class="carousel-item active" data-bs-interval="10000">
+                      <img src="{{ i }}" class="d-block w-100" alt="...">
+                  </div>
+              {% endif %}
+              {% endfor %}
+
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark"
+                  data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark"
+                  data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+      <form class="form-login" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+            <div>
+              <label for="photo">Выберите файл</label>
+              <input accept=".png,.jpg" type="file" class="form-control-file"
+                     id="photo" name="file">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Отправить</button>
+      </form>
+
+
+{% endblock %}

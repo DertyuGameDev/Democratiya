@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% set man = data | random %}
+
+    <div>
+        <h2>{{man['name']}}</h2><br>
+    </div>
+
+    {% set im = man['photo'] %}
+
+    <div>
+        <img src="static/img/{{im}}"><br>
+    </div>
+
+    {% set profession = man['profession']|sort %}
+
+    <div>
+        <p>{{profession|join(', ')}}</p>
+    </div>
+
+{% endblock %}

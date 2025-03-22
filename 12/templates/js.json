@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Майкл",
+    "photo": "Michael.png",
+    "profession": ["грабитель банков", "киллер"]
+  },
+  {
+    "name": "Франклин",
+    "photo": "Franklin.png",
+    "profession": ["угонщик машин", "гонщик"]
+  },
+  {
+    "name": "Тревор",
+    "photo": "Trevor.png",
+    "profession": ["пилот", "грабитель банков"]
+  }
+]
