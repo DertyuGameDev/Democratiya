@@ -1,0 +1,21 @@
+table {
+    text-align: center;
+    alignment: center;
+    width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    table-layout:fixed;
+
+}
+
+.heading_table {
+    background-color: lightgray;
+}
+
+.body_table {
+    background-color: lightsteelblue;
+}
+
+.pink_row {
+    background-color: pink;
+}

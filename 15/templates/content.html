@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 align="center">Works log</h1>
+{% for elem in get_data %}
+    <h2>Action # {{elem.id}}</h2>
+    {% set name_work = elem.name_work %}
+    {% set team_leader = elem.team_leader %}
+    {% set duration = elem.hours %}
+    {% set collaborators = elem.collaborators %}
+    {% set is_finished = elem.is_finished %}
+
+    {% if is_finished == 0 %}
+        {% set is_finished = "is not finished" %}
+    {% else %}
+        {% set is_finished = "is finished" %}
+    {% endif %}
+
+    <table>
+        <tr class="heading_table">
+            <td>Title of activity</td>
+            <td>Team leader</td>
+            <td>Duration</td>
+            <td>List of collaborators</td>
+            <td>is finished</td>
+        </tr>
+        <tr class="body_table">
+            <td>{{name_work}}</td>
+            <td>{{team_leader}}</td>
+            <td>{{duration}} hours</td>
+            <td>{{collaborators}}</td>
+            <td class="pink_row">{{is_finished}}</td>
+        </tr>
+    </table><br>
+
+{% endfor %}
+{% endblock %}
