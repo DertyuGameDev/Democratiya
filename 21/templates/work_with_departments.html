@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h4 align="center">List of Departments</h4>
+<div>
+    <a class="btn btn-secondary" href="/departaments">Back</a>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.title.label }}<br>
+            {{ form.title(class="form-control") }}<br>
+            {% for error in form.title.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+        </p>
+
+        <p>
+            {{ form.chief.label }}<br>
+            {{ form.chief(class="form-control") }}<br>
+            {% for error in form.chief.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+        </p>
+
+        <p>
+            {{ form.members.label }}<br>
+            {{ form.members(class="form-control") }}<br>
+            {% for error in form.members.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+        </p>
+
+        <p>
+        {{ form.email.label }}<br>
+        {{ form.email(class="form-control", type="email") }}
+        {% for error in form.email.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+        </p>
+
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        <div>{{ message }}</div>
+        <br>
+    </form>
+</div>
+
+{% endblock %}
