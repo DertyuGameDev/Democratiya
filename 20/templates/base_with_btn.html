@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h4 align="center">Works log</h4>
+    {% if current_user.is_authenticated %}
+    <div>
+        <a class="btn btn-secondary" href="/addjob">Add a Job</a>
+        <a class="btn btn-secondary" href="/departaments">Go to Departments</a><br>
+    </div>
+    {% elif not current_user.is_authenticated %}
+        <a class="btn btn-secondary" href="/">Jobs</a>
+        <a class="btn btn-secondary" href="/departaments">Departments</a><br>
+    {% endif %}
+    {% for item in jobs_data %}
+    <strong><h3>Action # {{item.id}}</h3></strong>
+    <table>
+        <tr class="heading_table">
+            <td>Title of activity</td>
+            <td>Team leader</td>
+            <td>Duration</td>
+            <td>List of collaborators</td>
+            <td>is finished</td>
+        </tr>
+        <tr class="body_table">
+            <td>{{item.job}}</td>
+            <td>{{item.user_relationship.name}}</td>
+            <td>{{item.work_size}} hours</td>
+            <td>{{item.collaborators}}</td>
+            {% if not item.is_finished%}
+                <td class="pink_row">{{item.is_finished}}</td>
+            {% else %}
+                <td class="green_row">{{item.is_finished}}</td>
+            {% endif %}
+        </tr>
+
+        {% if current_user.is_authenticated and current_user == item.user_relationship or current_user.is_authenticated
+        and current_user.id == 1 %}
+        <div>
+            <a href="/jobs_edit/{{ item.id }}" class="btn btn-warning">
+                Edit
+            </a>
+            <a href="/jobs_delete/{{ item.id }}" class="btn btn-danger">
+            Delete
+        </a>
+        </div>
+        {% endif %}
+
+    </table>
+    <br>
+{% endfor %}
+
+{% endblock %}
