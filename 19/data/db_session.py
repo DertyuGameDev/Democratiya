@@ -3,15 +3,10 @@ import sqlalchemy.orm as orm
 from sqlalchemy.orm import Session
 import sqlalchemy.ext.declarative as dec
 
-# абстрактная база, основа для будущих моделей
 SqlAlchemyBase = dec.declarative_base()
 
-# сессия подключения к базе
 __factory = None
 
-
-# инициализация подключения
-# db_file - путь до базы данны
 def global_init(db_file):
     global __factory
 

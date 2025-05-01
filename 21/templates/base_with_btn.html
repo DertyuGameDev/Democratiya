@@ -1,57 +1,57 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h4 align="center">Works log</h4>
-    {% if current_user.is_authenticated %}
+<h4 align="center">Works log</h4>
+{% if current_user.is_authenticated %}
+<div>
+    <a class="btn btn-secondary" href="/addjob">Add a Job</a>
+    <a class="btn btn-secondary" href="/departaments">Go to Departments</a><br>
+</div>
+{% elif not current_user.is_authenticated %}
+<a class="btn btn-secondary" href="/">Jobs</a>
+<a class="btn btn-secondary" href="/departaments">Departments</a><br>
+{% endif %}
+{% for item in print_data %}
+{% set job = item[0] %}
+{% set category = item[1] %}
+<strong><h3>Action # {{job.id}}</h3></strong>
+<table>
+    <tr class="heading_table">
+        <td>Title of activity</td>
+        <td>Team leader</td>
+        <td>Duration</td>
+        <td>List of collaborators</td>
+        <td>Hazard category</td>
+        <td>is finished</td>
+    </tr>
+    <tr class="body_table">
+        <td>{{job.job}}</td>
+        <td>{{job.user_relationship.name}}</td>
+        <td>{{job.work_size}} hours</td>
+        <td>{{job.collaborators}}</td>
+        <td>{{category.id}}</td>
+        {% if not job.is_finished%}
+        <td class="pink_row">{{job.is_finished}}</td>
+        {% else %}
+        <td class="green_row">{{job.is_finished}}</td>
+        {% endif %}
+
+    </tr>
+
+    {% if current_user.is_authenticated and current_user == job.user_relationship or current_user.is_authenticated
+    and current_user.id == 1 or current_user.is_authenticated and current_user.name == job.user_relationship.name%}
     <div>
-        <a class="btn btn-secondary" href="/addjob">Add a Job</a>
-        <a class="btn btn-secondary" href="/departaments">Go to Departments</a><br>
+        <a href="/jobs_edit/{{ job.id }}" class="btn btn-warning">
+            Изменить
+        </a>
+        <a href="/jobs_delete/{{ job.id }}" class="btn btn-danger">
+            Удалить
+        </a>
     </div>
-    {% elif not current_user.is_authenticated %}
-        <a class="btn btn-secondary" href="/">Jobs</a>
-        <a class="btn btn-secondary" href="/departaments">Departments</a><br>
     {% endif %}
-    {% for item in print_data %}
-        {% set job = item[0] %}
-        {% set category = item[1] %}
-        <strong><h3>Action # {{job.id}}</h3></strong>
-        <table>
-            <tr class="heading_table">
-                <td>Title of activity</td>
-                <td>Team leader</td>
-                <td>Duration</td>
-                <td>List of collaborators</td>
-                <td>Hazard category</td>
-                <td>is finished</td>
-            </tr>
-            <tr class="body_table">
-                <td>{{job.job}}</td>
-                <td>{{job.user_relationship.name}}</td>
-                <td>{{job.work_size}}</td>
-                <td>{{job.collaborators}}</td>
-                <td>{{category.id}}</td>
-                {% if not job.is_finished%}
-                    <td class="pink_row">{{job.is_finished}}</td>
-                {% else %}
-                    <td class="green_row">{{job.is_finished}}</td>
-                {% endif %}
 
-            </tr>
-
-            {% if current_user.is_authenticated and current_user == job.user_relationship or current_user.is_authenticated
-            and current_user.id == 1 %}
-            <div>
-                <a href="/jobs_edit/{{ job.id }}" class="btn btn-warning">
-                    Edit
-                </a>
-                <a href="/jobs_delete/{{ job.id }}" class="btn btn-danger">
-                Delete
-            </a>
-            </div>
-            {% endif %}
-
-        </table>
-        <br>
+</table>
+<br>
 {% endfor %}
 
 {% endblock %}

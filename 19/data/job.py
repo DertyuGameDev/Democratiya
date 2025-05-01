@@ -1,4 +1,4 @@
-from data.db_session import SqlAlchemyBase
+from .db_session import SqlAlchemyBase
 import sqlalchemy
 from sqlalchemy import orm
 import datetime
@@ -16,3 +16,4 @@ class Jobs(SqlAlchemyBase):
     is_finished = sqlalchemy.Column(sqlalchemy.Boolean, nullable=False)
 
     user_relationship = orm.relationship("User", back_populates="job_relationship")
+

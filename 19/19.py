@@ -1,9 +1,9 @@
 from data import db_session
-from data.user import User
-from data.job import Jobs
 from flask import Flask, render_template, redirect, abort, request
 from data.forms import LoginForm, RegisterForm, JobsForm
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
+from data.user import User
+from data.job import Jobs
 
 app = Flask(__name__)
 login_manager = LoginManager()
