@@ -5,10 +5,13 @@ from data.departments import Department
 from data.category import Category, association_table
 from flask import Flask, render_template, redirect, abort, request, make_response, jsonify
 from data.forms import *
+from data import users_resource, jobs_resource
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 from data import jobs_api, users_api
+from flask_restful import reqparse, abort, Api, Resource
 
 app = Flask(__name__)
+api = Api(app, catch_all_404s=True)
 login_manager = LoginManager()
 
 
@@ -16,8 +19,11 @@ def main():
     login_manager.init_app(app)
     app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
     db_session.global_init('db/test.db')
-    app.register_blueprint(jobs_api.blueprint)
-    app.register_blueprint(users_api.blueprint)
+    api.add_resource(users_resource.UserResource, '/api/v2/users/<int:user_id>')
+    api.add_resource(users_resource.UsersListResource, '/api/v2/users')
+    api.add_resource(jobs_resource.JobsResource, '/api/v2/jobs/<int:jobs_id>')
+    api.add_resource(jobs_resource.JobsListResource, '/api/v2/jobs')
+    app.run(port=8080, host='127.0.0.1', debug=True)
 
 
 @app.route('/', methods=["GET", "POST"])
