@@ -1,4 +1,4 @@
-from data.db_session import SqlAlchemyBase
+from .db_session import SqlAlchemyBase
 import sqlalchemy
 from sqlalchemy import orm
 import datetime

@@ -3,12 +3,11 @@ from flask import jsonify, make_response, request
 from .job import Jobs
 from . import db_session
 
+blueprint = flask.Blueprint('api_handlers', __name__, template_folder='templates')
 
-blueprint = flask.Blueprint('api_jobs', __name__, template_folder='templates')
 
-
-@blueprint.route('/api/get_all_jobs', methods=['GET'])
-def get_jobs():
+@blueprint.route('/api/jobs')
+def api_jobs():
     db_sess = db_session.create_session()
     jobs_data = db_sess.query(Jobs).all()
 
@@ -19,17 +18,17 @@ def get_jobs():
     return jsonify(jobs_data)
 
 
-@blueprint.route('/api/get_one_jobs/<int:job_id>')
+@blueprint.route('/api/jobs/<int:job_id>')
 def api_one_jobs(job_id):
     db_sess = db_session.create_session()
-    jobs_data = db_sess.query(Jobs).filter(Jobs.id == job_id).first()
+    jobs_data = db_sess.query(Jobs).get(job_id)
     if not jobs_data:
-        return make_response(jsonify({'error': 'Empty request'}), 400)
+        return make_response(jsonify({'error': 'Not found'}), 404)
     return jsonify({'jobs': jobs_data.to_dict(
         only=("id", "team_leader", "job", "work_size", "collaborators", "start_date", "end_date", "is_finished"))})
 
 
-@blueprint.route('/api/create_jobs', methods=['POST'])
+@blueprint.route('/api/jobs', methods=['POST'])
 def create_jobs():
     if not request.json:
         return make_response(jsonify({'error': 'Empty request'}), 400)
@@ -49,6 +48,17 @@ def create_jobs():
     return jsonify({'id': jobs.id, 'team_leader': jobs.team_leader, 'job': jobs.job, 'work_size': jobs.work_size,
                     'collaborators': jobs.collaborators, 'start_date': jobs.start_date, 'end_date': jobs.end_date,
                     'is_finished': jobs.is_finished})
+
+
+@blueprint.route('/api/job_delete/<int:job_id>', methods=['DELETE'])
+def delete_job(job_id):
+    db_sess = db_session.create_session()
+    news = db_sess.query(Jobs).get(job_id)
+    if not news:
+        return make_response(jsonify({'error': 'Not found'}), 404)
+    db_sess.delete(news)
+    db_sess.commit()
+    return jsonify({'success': 'OK'})
 
 
 @blueprint.route('/api/edit_jobs/<int:job_id>', methods=['PUT'])
@@ -76,14 +86,3 @@ def edit_jobs(job_id):
         {'id': obj_job.id, 'team_leader': obj_job.team_leader, 'job': obj_job.job, 'work_size': obj_job.work_size,
          'collaborators': obj_job.collaborators, 'start_date': obj_job.start_date, 'end_date': obj_job.end_date,
          'is_finished': obj_job.is_finished})
-
-
-@blueprint.route('/api/job_delete/<int:job_id>', methods=['DELETE'])
-def delete_job(job_id):
-    db_sess = db_session.create_session()
-    news = db_sess.query(Jobs).get(job_id)
-    if not news:
-        return make_response(jsonify({'error': 'Not found'}), 404)
-    db_sess.delete(news)
-    db_sess.commit()
-    return jsonify({'success': 'OK'})

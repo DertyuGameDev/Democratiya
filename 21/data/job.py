@@ -2,9 +2,10 @@ from .db_session import SqlAlchemyBase
 import sqlalchemy
 from sqlalchemy import orm
 import datetime
+from sqlalchemy_serializer import SerializerMixin
 
 
-class Jobs(SqlAlchemyBase):
+class Jobs(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'jobs'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     team_leader = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
@@ -14,8 +15,8 @@ class Jobs(SqlAlchemyBase):
     start_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
     end_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
     is_finished = sqlalchemy.Column(sqlalchemy.Boolean, nullable=False)
-
-    user_relationship = orm.relationship("User", back_populates="job_relationship")
     categories_relationship = orm.relationship("Category",
                                                secondary="association",
                                                backref="job")
+    user_relationship = orm.relationship("User", back_populates="job_relationship")
+

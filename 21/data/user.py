@@ -4,9 +4,10 @@ from sqlalchemy import orm
 import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from sqlalchemy_serializer import SerializerMixin
 
 
-class User(SqlAlchemyBase, UserMixin):
+class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
@@ -17,11 +18,12 @@ class User(SqlAlchemyBase, UserMixin):
     speciality = sqlalchemy.Column(sqlalchemy.String)
     address = sqlalchemy.Column(sqlalchemy.String)
     email = sqlalchemy.Column(sqlalchemy.String, unique=True)
+    city_from = sqlalchemy.Column(sqlalchemy.String)
     hashed_password = sqlalchemy.Column(sqlalchemy.String)
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
 
     job_relationship = orm.relationship("Jobs", back_populates="user_relationship")
-    departament_relationship = orm.relationship("Department")
+    departament_relationship = orm.relationship("Department", back_populates="user_relationship")
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)

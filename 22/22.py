@@ -1,11 +1,12 @@
 from data import db_session
 from data.user import User
 from data.job import Jobs
+from data.departments import Department
 from flask import Flask, render_template, redirect, abort, request
 from form.forms import *
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
-
 from data import api_handlers
+from data.category import Category, association_table
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -22,7 +23,14 @@ def main():
 def main_route():
     db_sess = db_session.create_session()
     jobs_data = db_sess.query(Jobs).all()
-    return render_template('base_with_btn.html', jobs_data=jobs_data)
+    print_data = []
+
+    data_info = db_sess.query(association_table).all()
+    for elem in data_info:
+        job = db_sess.query(Jobs).filter(Jobs.id == elem[0]).first()
+        category = db_sess.query(Category).filter(Category.id == elem[1]).first()
+        print_data.append((job, category))
+    return render_template('base_with_btn.html', jobs_data=jobs_data, print_data=print_data, title="Jobs page")
 
 
 @login_manager.user_loader
@@ -94,6 +102,12 @@ def add_job():
         db_sess = db_session.create_session()
         if not db_sess.query(User).filter(User.id == form.team_leader.data).first():
             return render_template(template_name_or_list="job.html", form=form, title="Adding a job")
+
+        id_category = int(form.id_category.data)
+        if not db_sess.query(Category).filter(id_category == Category.id).first():
+            return render_template(template_name_or_list="job.html", form=form, title="Adding a job",
+                                   text="Adding a Job", message="Категории с указанном id не существует")
+
         job = Jobs()
         job.job = form.job.data
         job.team_leader = form.team_leader.data
@@ -103,6 +117,8 @@ def add_job():
         job.end_date = form.end_date.data
         job.is_finished = form.is_finished.data
 
+        category = db_sess.query(Category).filter(Category.id == form.id_category.data).first()
+        job.categories_relationship.append(category)
         db_sess.add(job)
         db_sess.commit()
 
@@ -156,6 +172,88 @@ def jobs_delete(id):
         ((Jobs.team_leader == current_user.id) | (current_user.id == 1))).first()
     if job:
         db_sess.delete(job)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/')
+
+
+@app.route('/departaments', methods=['GET', 'POST'])
+def departments():
+    db_sess = db_session.create_session()
+    department_data = db_sess.query(Department).all()
+    return render_template('departments.html', title='Departments', department_data=department_data)
+
+
+@app.route("/adddepartments", methods=["GET", "POST"])
+@login_required
+def adddepartments():
+    form = DepartmentForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.email == form.email.data).first()
+        if user:
+            department = Department()
+            department.title = form.title.data
+            department.chief = form.chief.data
+            department.email = form.email.data
+            department.members = form.members.data
+
+            department.user_id = user.id
+            db_sess.add(department)
+            db_sess.commit()
+            return redirect("/")
+    return render_template('work_with_departments.html', title='Departments', form=form)
+
+
+@app.route('/editdepartments/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_departments(id):
+    form = DepartmentForm()
+    if request.method == "GET":
+        db_sess = db_session.create_session()
+        dep_check = db_sess.query(Department).filter(Department.id == id).filter(
+            ((Department.user_id == current_user.id) | (current_user.id == 1))).first()
+
+        if dep_check:
+            form.title.data = dep_check.title
+            form.chief.data = dep_check.chief
+            form.members.data = dep_check.members
+            form.email.data = dep_check.email
+        else:
+            abort(404)
+
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        dep_obj = db_sess.query(Department).filter(Department.id == id).filter(
+            ((Department.user_id == current_user.id) | (current_user.id == 1))).first()
+
+        if dep_obj:
+            user = db_sess.query(User).filter(User.email == form.email.data).first()
+            if user:
+                dep_obj.title = form.title.data
+                dep_obj.chief = form.chief.data
+                dep_obj.members = form.members.data
+                dep_obj.email = form.email.data
+                dep_obj.user_id = user.id
+                db_sess.merge(dep_obj)
+                db_sess.commit()
+                return redirect('/')
+            return render_template('work_with_departments.html', title='Departments', form=form,
+                                   message="Ошибка с почтой")
+        else:
+            abort(404)
+    return render_template('work_with_departments.html', title='Departments', form=form)
+
+
+@app.route('/deletedepartments/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_department(id):
+    db_sess = db_session.create_session()
+    dep = db_sess.query(Department).filter(Department.id == id).filter(
+        ((Department.user_id == current_user.id) | (current_user.id == 1))).first()
+    if dep:
+        db_sess.delete(dep)
         db_sess.commit()
     else:
         abort(404)

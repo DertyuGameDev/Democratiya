@@ -1,7 +1,7 @@
 import flask
 from flask import jsonify
-from data.job import Jobs
-from data import db_session
+from .job import Jobs
+from . import db_session
 
 blueprint = flask.Blueprint('api_handlers', __name__, template_folder='templates')
 

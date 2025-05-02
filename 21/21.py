@@ -3,15 +3,21 @@ from data.user import User
 from data.job import Jobs
 from data.departments import Department
 from data.category import Category, association_table
-from flask import Flask, render_template, redirect, abort, request
-from data.forms import LoginForm, RegisterForm, JobsForm, DepartmentForm
+from flask import Flask, render_template, redirect, abort, request, make_response, jsonify
+from data.forms import *
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
+from data import jobs_api, users_api
 
 app = Flask(__name__)
 login_manager = LoginManager()
-login_manager.init_app(app)
-app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
-db_session.global_init('db/test.db')
+
+
+def main():
+    login_manager.init_app(app)
+    app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+    db_session.global_init('db/test.db')
+    app.register_blueprint(jobs_api.blueprint)
+    app.register_blueprint(users_api.blueprint)
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -28,10 +34,20 @@ def main_route():
     return render_template('base_with_btn.html', jobs_data=jobs_data, print_data=print_data, title="Jobs page")
 
 
+@app.errorhandler(400)
+def bad_request(_):
+    return make_response(jsonify({'error': 'Bad Request'}), 400)
+
+
+@app.errorhandler(404)
+def not_found(_):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
-    return db_sess.query(User).get(user_id)
+    return db_sess.get(User, user_id)
 
 
 @app.route('/logout')
@@ -261,4 +277,5 @@ def delete_department(id):
 
 
 if __name__ == '__main__':
+    main()
     app.run(port=8080, host='127.0.0.1', debug=True)
