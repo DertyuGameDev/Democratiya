@@ -23,6 +23,8 @@ def main():
     api.add_resource(users_resource.UsersListResource, '/api/v2/users')
     api.add_resource(jobs_resource.JobsResource, '/api/v2/jobs/<int:jobs_id>')
     api.add_resource(jobs_resource.JobsListResource, '/api/v2/jobs')
+    app.register_blueprint(jobs_api.blueprint)
+    app.register_blueprint(users_api.blueprint)
     app.run(port=8080, host='127.0.0.1', debug=True)
 
 
